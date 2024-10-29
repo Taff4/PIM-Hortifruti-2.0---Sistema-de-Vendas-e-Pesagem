@@ -1,38 +1,61 @@
-#include <stdio.h>        // Biblioteca para entrada e saída
-#include <stdlib.h>       // Biblioteca para alocação de memória
-#include "produtos.h"     // Inclui o cabeçalho de produtos
+#include <stdio.h>        // Biblioteca para entrada e saÃ­da
+#include <stdlib.h>       // Biblioteca para alocaÃ§Ã£o de memÃ³ria
+#include <string.h>       // Biblioteca para manipulaÃ§Ã£o de strings
+#include "produtos.h"     // Inclui o cabeÃ§alho de produtos
 
 #define LIMPA_BUFFER fflush(stdin); // Macro para limpar o buffer do teclado
 
-// Função para cadastrar um produto e salvá-lo em um arquivo
+// FunÃ§Ã£o para verificar se o produto jÃ¡ estÃ¡ cadastrado
+int produtoExiste(int codigo) {
+    FILE *arq = fopen("produtos.txt", "r");
+    if (arq == NULL) return 0; // Se o arquivo nÃ£o existe, retorna que o produto nÃ£o existe
+
+    Produto p;
+    while (fread(&p, sizeof(Produto), 1, arq) == 1) {
+        if (p.codigo == codigo) {
+            fclose(arq);
+            return 1; // Produto encontrado
+        }
+    }
+    fclose(arq);
+    return 0; // Produto nÃ£o encontrado
+}
+
+// FunÃ§Ã£o para cadastrar um produto e salvÃ¡-lo em um arquivo
 void cadastrarProduto(Produto *p) {
-    printf("Digite o código do produto: ");
+    printf("Digite o cÃ³digo do produto: ");
     scanf("%d", &p->codigo);
+    
+    if (produtoExiste(p->codigo)) {
+        printf("Erro: Produto jÃ¡ cadastrado.\n"); // Evita duplicidade
+        return;
+    }
+
     printf("Nome do produto: ");
     LIMPA_BUFFER
-    scanf("%49[^\n]", p->nome); // Lê o nome do produto
-    printf("Preço por kg: ");
-    scanf("%f", &p->preco_por_kg); // Lê o preço por kg
+    scanf("%49[^\n]", p->nome); // LÃª o nome do produto
+    printf("PreÃ§o por kg: ");
+    scanf("%f", &p->preco_por_kg); // LÃª o preÃ§o por kg
     printf("Categoria: ");
     LIMPA_BUFFER
-    scanf("%19[^\n]", p->categoria); // Lê a categoria do produto
+    scanf("%19[^\n]", p->categoria); // LÃª a categoria do produto
 
     // Abre o arquivo para adicionar o produto
     FILE *arq = fopen("produtos.txt", "a");
     if (arq == NULL) {
-        printf("Erro ao abrir o arquivo!\n"); // Exibe mensagem de erro se não abrir o arquivo
+        printf("Erro ao abrir o arquivo!\n"); // Exibe mensagem de erro se nÃ£o abrir o arquivo
         return;
     }
     fwrite(p, sizeof(Produto), 1, arq); // Grava o produto no arquivo
-    fclose(arq); // Fecha o arquivo após salvar
+    fclose(arq); // Fecha o arquivo apÃ³s salvar
     printf("Produto cadastrado com sucesso!\n");
 }
 
-// Função para listar todos os produtos cadastrados no arquivo
+// FunÃ§Ã£o para listar todos os produtos cadastrados no arquivo
 void listarProdutos() {
     FILE *arq = fopen("produtos.txt", "r"); // Abre o arquivo para leitura
     if (arq == NULL) {
-        printf("Nenhum produto cadastrado.\n"); // Mensagem se o arquivo não existir
+        printf("Nenhum produto cadastrado.\n"); // Mensagem se o arquivo nÃ£o existir
         return;
     }
 
@@ -40,9 +63,9 @@ void listarProdutos() {
     int count = 0; // Contador para verificar se existem produtos
 
     printf("\nLista de Produtos:\n");
-    // Lê e exibe cada produto armazenado no arquivo
+    // LÃª e exibe cada produto armazenado no arquivo
     while (fread(&p, sizeof(Produto), 1, arq) == 1) {
-        printf("Código: %d, Nome: %s, Preço/kg: %.2f, Categoria: %s\n", p.codigo, p.nome, p.preco_por_kg, p.categoria);
+        printf("CÃ³digo: %d, Nome: %s, PreÃ§o/kg: %.2f, Categoria: %s\n", p.codigo, p.nome, p.preco_por_kg, p.categoria);
         count++;
     }
 
@@ -50,6 +73,5 @@ void listarProdutos() {
         printf("Nenhum produto cadastrado.\n"); // Exibe se o arquivo estiver vazio
     }
 
-    fclose(arq); // Fecha o arquivo após exibir todos os produtos
+    fclose(arq); // Fecha o arquivo apÃ³s exibir todos os produtos
 }
-
