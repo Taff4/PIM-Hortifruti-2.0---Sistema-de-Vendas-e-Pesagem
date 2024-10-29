@@ -1,48 +1,56 @@
-#include <stdio.h>        // Biblioteca para operaÁıes de entrada e saÌda
+#include <stdio.h>        // Biblioteca para opera√ß√µes de entrada e sa√≠da
 #include <locale.h>       // Biblioteca para configurar o idioma
-#include <stdlib.h>       // Biblioteca para alocaÁ„o de memÛria e controle do programa
-#include <time.h>         // Biblioteca para manipulaÁ„o de data e hora
-#include "produtos.h"     // Inclui o cabeÁalho com funÁıes e estrutura de produtos
-#include "vendas.h"       // Inclui o cabeÁalho com funÁıes e estrutura de vendas
+#include <stdlib.h>       // Biblioteca para aloca√ß√£o de mem√≥ria e controle do programa
+#include <time.h>         // Biblioteca para manipula√ß√£o de data e hora
+#include "produtos.h"     // Inclui o cabe√ßalho com fun√ß√µes e estrutura de produtos
+#include "vendas.h"       // Inclui o cabe√ßalho com fun√ß√µes e estrutura de vendas
 
 #define LIMPA_BUFFER fflush(stdin); // Macro para limpar o buffer do teclado
 
 int main(void) {
-    setlocale(LC_ALL, "Portuguese"); // Configura o idioma para portuguÍs
-    Produto produto;                 // Cria uma vari·vel para armazenar dados de um produto
-    Venda venda;                     // Cria uma vari·vel para armazenar dados de uma venda
-    char opcao;                      // Vari·vel para armazenar a opÁ„o do menu escolhida pelo usu·rio
-	system("color4f");
-	
+    setlocale(LC_ALL, "Portuguese"); // Configura o idioma para portugu√™s
+    system("color 4f");              // Define a cor do console (fundo vermelho com texto branco)
+    Produto produto;                 // Vari√°vel para armazenar dados de um produto
+    Venda venda;                     // Vari√°vel para armazenar dados de uma venda
+    char opcao;                      // Vari√°vel para armazenar a op√ß√£o do menu escolhida pelo usu√°rio
+
     do {
-        system("cls"); // Limpa a tela a cada vez que o menu È exibido
-        printf("\nBem-vindo ao sistema Viva Fruit\n");
-        printf("1. Cadastrar Produto\n2. Listar Produtos\n3. Registrar Venda\n4. Gerar RelatÛrio de Vendas\n5. Sair\nEscolha uma opÁ„o: ");
+        system("cls"); // Limpa a tela para uma nova exibi√ß√£o do menu
+        printf("+------------------------------------+\n");
+        printf("|        SISTEMA VIVA FRUIT          |\n");
+        printf("+------------------------------------+\n");
+        printf("| 1. Cadastrar Produto               |\n");
+        printf("| 2. Listar Produtos                 |\n");
+        printf("| 3. Registrar Venda                 |\n");
+        printf("| 4. Gerar Relat√≥rio de Vendas       |\n");
+        printf("| 5. Sair                            |\n");
+        printf("+------------------------------------+\n");
+        printf("Escolha uma op√ß√£o: ");
         LIMPA_BUFFER
         scanf("%c", &opcao);
 
         switch(opcao) {
             case '1':
-                cadastrarProduto(&produto); // Chama a funÁ„o para cadastrar um novo produto
+                cadastrarProduto(&produto); // Fun√ß√£o para cadastrar um novo produto
                 break;
             case '2':
-                listarProdutos(); // Chama a funÁ„o para listar todos os produtos cadastrados
+                listarProdutos(); // Fun√ß√£o para listar todos os produtos cadastrados
                 break;
             case '3':
-                registrarVenda(&venda); // Chama a funÁ„o para registrar uma nova venda
+                registrarVenda(&venda); // Fun√ß√£o para registrar uma nova venda
                 break;
             case '4':
-                gerarRelatorio(); // Chama a funÁ„o para gerar um relatÛrio de vendas
+                gerarRelatorio(); // Fun√ß√£o para gerar um relat√≥rio de vendas
                 break;
             case '5':
                 printf("Saindo do sistema...\n"); // Sai do programa
                 break;
             default:
-                printf("OpÁ„o inv·lida!\n"); // Exibe mensagem de erro se a opÁ„o for inv·lida
+                printf("Op√ß√£o inv√°lida! Tente novamente.\n"); // Exibe mensagem de erro se a op√ß√£o for inv√°lida
                 break;
         }
-    } while(opcao != '5'); // O menu È exibido novamente atÈ que o usu·rio escolha sair
+        system("pause"); // Pausa antes de retornar ao menu
+    } while(opcao != '5'); // Repete o menu at√© que o usu√°rio escolha sair
 
     return 0; // Indica que o programa terminou sem erros
 }
-
