@@ -8,8 +8,7 @@ typedef struct {
     char data[11];
 } Venda;
 
-void registrarVenda(Venda *v);
+void registrarVenda();
 void gerarRelatorio();
 
 #endif
-
