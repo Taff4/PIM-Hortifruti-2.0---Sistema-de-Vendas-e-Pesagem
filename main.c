@@ -20,7 +20,7 @@ int main(void) {
         printf("|        SISTEMA VIVA FRUIT          |\n");
         printf("+------------------------------------+\n");
         printf("| 1. Cadastrar Produto               |\n");
-        printf("| 2. Listar Produtos                 |\n");
+        printf("| 2. Lista de Produtos               |\n");
         printf("| 3. Registrar Venda                 |\n");
         printf("| 4. Gerar Relatório de Vendas       |\n");
         printf("| 5. Sair                            |\n");
