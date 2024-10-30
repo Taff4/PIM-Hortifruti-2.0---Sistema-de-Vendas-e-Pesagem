@@ -8,8 +8,7 @@ typedef struct {
     char categoria[20];
 } Produto;
 
-void cadastrarProduto(Produto *p);
+void cadastrarProduto();
 void listarProdutos();
 
 #endif
-
