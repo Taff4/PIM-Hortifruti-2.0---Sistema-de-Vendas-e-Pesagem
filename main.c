@@ -1,21 +1,21 @@
-#include <stdio.h>        // Biblioteca para operações de entrada e saída
-#include <locale.h>       // Biblioteca para configurar o idioma
-#include <stdlib.h>       // Biblioteca para alocação de memória e controle do programa
-#include <time.h>         // Biblioteca para manipulação de data e hora
-#include "produtos.h"     // Inclui o cabeçalho com funções e estrutura de produtos
-#include "vendas.h"       // Inclui o cabeçalho com funções e estrutura de vendas
+#include <stdio.h>
+#include <locale.h>
+#include <stdlib.h>
+#include "produtos.h"
+#include "vendas.h"
 
-#define LIMPA_BUFFER fflush(stdin); // Macro para limpar o buffer do teclado
+#define LIMPA_BUFFER fflush(stdin);
 
 int main(void) {
-    setlocale(LC_ALL, "Portuguese"); // Configura o idioma para português
-    system("color 4f");              // Define a cor do console (fundo vermelho com texto branco)
-    Produto produto;                 // Variável para armazenar dados de um produto
-    Venda venda;                     // Variável para armazenar dados de uma venda
-    char opcao;                      // Variável para armazenar a opção do menu escolhida pelo usuário
+    setlocale(LC_ALL, "Portuguese");
+    system("color 4f");
+
+    Produto produto;
+    Venda venda;
+    char opcao;
 
     do {
-        system("cls"); // Limpa a tela para uma nova exibição do menu
+        system("cls");
         printf("+------------------------------------+\n");
         printf("|        SISTEMA VIVA FRUIT          |\n");
         printf("+------------------------------------+\n");
@@ -31,26 +31,27 @@ int main(void) {
 
         switch(opcao) {
             case '1':
-                cadastrarProduto(&produto); // Função para cadastrar um novo produto
+                cadastrarProduto(&produto);
                 break;
             case '2':
-                listarProdutos(); // Função para listar todos os produtos cadastrados
+                listarProdutos();
                 break;
             case '3':
-                registrarVenda(&venda); // Função para registrar uma nova venda
+                registrarVenda(&venda);
                 break;
             case '4':
-                gerarRelatorio(); // Função para gerar um relatório de vendas
+                gerarRelatorio();
                 break;
             case '5':
-                printf("Saindo do sistema...\n"); // Sai do programa
+                printf("Saindo do sistema...\n");
                 break;
             default:
-                printf("Opção inválida! Tente novamente.\n"); // Exibe mensagem de erro se a opção for inválida
+                printf("Opção inválida! Tente novamente.\n");
                 break;
         }
-        system("pause"); // Pausa antes de retornar ao menu
-    } while(opcao != '5'); // Repete o menu até que o usuário escolha sair
+        system("pause");
+    } while(opcao != '5');
 
-    return 0; // Indica que o programa terminou sem erros
+    return 0;
 }
+
