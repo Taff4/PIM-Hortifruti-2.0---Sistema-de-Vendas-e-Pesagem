@@ -22,13 +22,14 @@ int produtoExiste(int codigo) {
 }
 
 void cadastrarProduto(Produto *p) {
-    printf("\n+--------------------------------------+\n");
-    printf("|         CADASTRO DE PRODUTO          |\n");
-    printf("+--------------------------------------+\n");
-
-    printf("Digite o código do produto ou '0' para retornar ao menu: ");
+	system("cls");
+    printf("+------------------------------------------------------------+\n");
+    printf("|                   CADASTRO DE PRODUTO                      |\n");
+    printf("+------------------------------------------------------------+\n");
+    printf("| Digite o código do produto ou '0' para retornar ao menu: ");
     scanf("%d", &p->codigo);
-
+	printf("+------------------------------------------------------------+\n");
+	
     if (p->codigo == 0) {
         printf("Retornando ao menu...\n");
         return;
@@ -40,16 +41,19 @@ void cadastrarProduto(Produto *p) {
     }
 
     LIMPA_BUFFER
-    printf("Nome do produto: ");
+    printf("| Nome do produto: ");
     scanf("%49[^\n]", p->nome);
+    printf("+------------------------------------------------------------+\n");
 
-    printf("Preço por kg: ");
+    printf("| Preço por kg: ");
     scanf("%f", &p->preco_por_kg);
-
+	printf("+------------------------------------------------------------+\n");
+	
     LIMPA_BUFFER
-    printf("Categoria: ");
+    printf("| Categoria: ");
     scanf("%19[^\n]", p->categoria);
-
+	printf("+------------------------------------------------------------+\n");
+	
     FILE *arq = fopen("produtos.txt", "a");
     if (arq == NULL) {
         printf("Erro ao abrir o arquivo!\n");
@@ -63,6 +67,7 @@ void cadastrarProduto(Produto *p) {
 }
 
 void listarProdutos() {
+	system("cls");
     FILE *arq = fopen("produtos.txt", "r");
     if (arq == NULL) {
         printf("Nenhum produto cadastrado.\n");
@@ -80,4 +85,5 @@ void listarProdutos() {
     printf("+------------------------------------------------------+\n");
 
     fclose(arq);
+    
 }
