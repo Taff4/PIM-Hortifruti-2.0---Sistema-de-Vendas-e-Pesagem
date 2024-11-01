@@ -1,47 +1,91 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
-#include <string.h> // Necessário para a comparação de strings com strcmp
+#include <string.h>
+#include <time.h>
 #include "produtos.h"
 #include "vendas.h"
 
 #define LIMPA_BUFFER fflush(stdin);
 
-// Função para realizar o login
+const char *colaboradores[] = {"Nicole", "Rafael", "Matheus", "Guilherme", "Nicolas", "Khalil"};
+const int num_colaboradores = 6;
+char operador[20];
+
+// Função para exibir data e hora
+void exibirDataHora() {
+    time_t agora = time(NULL);
+    struct tm *dataHora = localtime(&agora);
+    printf("%02d/%02d/%d %02d:%02d:%02d\n", 
+           dataHora->tm_mday, dataHora->tm_mon + 1, dataHora->tm_year + 1900, 
+           dataHora->tm_hour, dataHora->tm_min, dataHora->tm_sec);
+}
+
+// Função para realizar login
 int login() {
-    char usuario[10], senha[10];
-    int tentativas = 3; // Limite de tentativas
+    char usuario[20], senha[10];
+    int tentativas = 3;
+    int i;
 
     while (tentativas > 0) {
-        printf("----- Login no Sistema -----\n");
+        system("cls");
+        printf("+--------------------------------+\n");
+        printf("|       SISTEMA DE LOGIN         |\n");
+        printf("+--------------------------------+\n");
         printf("Usuário: ");
         LIMPA_BUFFER
-        scanf("%9s", usuario);
-
+        scanf("%19s", usuario);
         printf("Senha: ");
         LIMPA_BUFFER
         scanf("%9s", senha);
 
-        // Verifica o login e a senha
         if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
-            printf("Login bem-sucedido!\n");
-            return 1; // Login com sucesso
+            strcpy(operador, "Administrador");
+            return 2;
         } else {
-            tentativas--;
-            printf("Usuário ou senha incorretos. Tentativas restantes: %d\n", tentativas);
+            for (i = 0; i < num_colaboradores; i++) {
+                if (strcmp(usuario, colaboradores[i]) == 0 && strcmp(senha, "123") == 0) {
+                    strcpy(operador, usuario);
+                    return 1;
+                }
+            }
         }
+        
+        tentativas--;
+        printf("Usuário ou senha incorretos. Tentativas restantes: %d\n", tentativas);
     }
+
     printf("Número de tentativas excedido. Encerrando o sistema.\n");
-    return 0; // Falha no login
+    return 0;
+}
+
+// Função para solicitar login do administrador para funções restritas
+int loginAdministrador() {
+    char usuario[20], senha[10];
+
+    printf("Para acessar esta função, faça o login de administrador.\n");
+    printf("Usuário: ");
+    LIMPA_BUFFER
+    scanf("%19s", usuario);
+    printf("Senha: ");
+    LIMPA_BUFFER
+    scanf("%9s", senha);
+
+    if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
+        return 1;
+    } else {
+        printf("Acesso negado. Usuário ou senha incorretos.\n");
+        return 0;
+    }
 }
 
 int main(void) {
     setlocale(LC_ALL, "Portuguese");
     system("color 4f");
 
-    // Executa o login antes do menu principal
-    if (!login()) {
-        return 0; // Encerra o programa se o login falhar
+    int acesso = login();
+    if (acesso == 0) {
+        return 0;
     }
 
     Produto produto;
@@ -53,6 +97,10 @@ int main(void) {
         printf("+------------------------------------+\n");
         printf("|        SISTEMA VIVA FRUIT          |\n");
         printf("+------------------------------------+\n");
+        printf("| Operador: %-24s |\n", operador);
+        printf("| Data/Hora de acesso: ");
+        exibirDataHora();
+        printf("+------------------------------------+\n");
         printf("| 1. Cadastrar Produto               |\n");
         printf("| 2. Lista de Produtos               |\n");
         printf("| 3. Registrar Venda                 |\n");
@@ -63,9 +111,11 @@ int main(void) {
         LIMPA_BUFFER
         scanf("%c", &opcao);
 
-        switch(opcao) {
+        switch (opcao) {
             case '1':
-                cadastrarProduto(&produto);
+                if (loginAdministrador()) {
+                    cadastrarProduto(&produto);
+                }
                 break;
             case '2':
                 listarProdutos();
@@ -74,7 +124,9 @@ int main(void) {
                 registrarVenda(&venda);
                 break;
             case '4':
-                gerarRelatorio();
+                if (loginAdministrador()) {
+                    gerarRelatorio();
+                }
                 break;
             case '5':
                 printf("Saindo do sistema...\n");
@@ -84,8 +136,7 @@ int main(void) {
                 break;
         }
         system("pause");
-    } while(opcao != '5');
+    } while (opcao != '5');
 
     return 0;
 }
-
