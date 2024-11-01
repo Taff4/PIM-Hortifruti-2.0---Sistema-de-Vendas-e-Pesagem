@@ -98,7 +98,7 @@ int main(void) {
         printf("|        SISTEMA VIVA FRUIT          |\n");
         printf("+------------------------------------+\n");
         printf("| Operador: %-24s |\n", operador);
-        printf("| Data/Hora de acesso: ");
+        printf("| Data/Hora ");
         exibirDataHora();
         printf("+------------------------------------+\n");
         printf("| 1. Cadastrar Produto               |\n");
