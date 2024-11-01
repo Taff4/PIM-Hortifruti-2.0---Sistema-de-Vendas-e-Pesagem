@@ -1,14 +1,48 @@
 #include <stdio.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <string.h> // Necessário para a comparação de strings com strcmp
 #include "produtos.h"
 #include "vendas.h"
 
 #define LIMPA_BUFFER fflush(stdin);
 
+// Função para realizar o login
+int login() {
+    char usuario[10], senha[10];
+    int tentativas = 3; // Limite de tentativas
+
+    while (tentativas > 0) {
+        printf("----- Login no Sistema -----\n");
+        printf("Usuário: ");
+        LIMPA_BUFFER
+        scanf("%9s", usuario);
+
+        printf("Senha: ");
+        LIMPA_BUFFER
+        scanf("%9s", senha);
+
+        // Verifica o login e a senha
+        if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
+            printf("Login bem-sucedido!\n");
+            return 1; // Login com sucesso
+        } else {
+            tentativas--;
+            printf("Usuário ou senha incorretos. Tentativas restantes: %d\n", tentativas);
+        }
+    }
+    printf("Número de tentativas excedido. Encerrando o sistema.\n");
+    return 0; // Falha no login
+}
+
 int main(void) {
     setlocale(LC_ALL, "Portuguese");
     system("color 4f");
+
+    // Executa o login antes do menu principal
+    if (!login()) {
+        return 0; // Encerra o programa se o login falhar
+    }
 
     Produto produto;
     Venda venda;
