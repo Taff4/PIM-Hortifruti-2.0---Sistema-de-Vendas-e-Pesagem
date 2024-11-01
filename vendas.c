@@ -8,7 +8,7 @@
 
 // Função para registrar uma nova venda
 void registrarVenda() {
-	system("cls");
+    system("cls");
     Venda v;
     Produto p;
 
@@ -17,11 +17,12 @@ void registrarVenda() {
     printf("| Digite o código do produto: ");
     scanf("%d", &v.codigo_produto);
 
+    // Verifica se o produto existe ao ler o arquivo
     FILE *arq_prod = fopen("produtos.txt", "r");
     int encontrado = 0;
     while (fread(&p, sizeof(Produto), 1, arq_prod) == 1) {
         if (p.codigo == v.codigo_produto) {
-        	printf("+-------------------------------------+\n");
+            printf("+-------------------------------------+\n");
             printf("| Produto: %s\n", p.nome);
             printf("+-------------------------------------+\n");
             printf("| Peso do produto (kg): ");
@@ -39,10 +40,12 @@ void registrarVenda() {
         return;
     }
 
+    // Gera a data da venda
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
     sprintf(v.data, "%02d/%02d/%d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
+    // Salva a venda no arquivo vendas.txt
     FILE *arq_vendas = fopen("vendas.txt", "a");
     if (arq_vendas != NULL) {
         fwrite(&v, sizeof(Venda), 1, arq_vendas);
@@ -51,9 +54,9 @@ void registrarVenda() {
     }
 }
 
-// Função para gerar relatório das vendas
+// Função para gerar o relatório de vendas
 void gerarRelatorio() {
-	system("cls");
+    system("cls");
     FILE *arq = fopen("vendas.txt", "r");
     if (arq == NULL) {
         printf("Nenhuma venda registrada.\n");
