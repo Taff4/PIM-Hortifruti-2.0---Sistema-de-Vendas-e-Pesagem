@@ -7,6 +7,7 @@
 #define LIMPA_BUFFER fflush(stdin);
 
 int produtoExiste(int codigo) {
+    // Abre o arquivo de produtos em modo leitura para verificar a existência de um código
     FILE *arq = fopen("produtos.txt", "r");
     if (arq == NULL) return 0;
 
@@ -22,14 +23,14 @@ int produtoExiste(int codigo) {
 }
 
 void cadastrarProduto(Produto *p) {
-	system("cls");
+    system("cls");
     printf("+------------------------------------------------------------+\n");
     printf("|                   CADASTRO DE PRODUTO                      |\n");
     printf("+------------------------------------------------------------+\n");
     printf("| Digite o código do produto ou '0' para retornar ao menu: ");
     scanf("%d", &p->codigo);
-	printf("+------------------------------------------------------------+\n");
-	
+    printf("+------------------------------------------------------------+\n");
+
     if (p->codigo == 0) {
         printf("Retornando ao menu...\n");
         return;
@@ -47,13 +48,14 @@ void cadastrarProduto(Produto *p) {
 
     printf("| Preço por kg: ");
     scanf("%f", &p->preco_por_kg);
-	printf("+------------------------------------------------------------+\n");
-	
+    printf("+------------------------------------------------------------+\n");
+
     LIMPA_BUFFER
     printf("| Categoria: ");
     scanf("%19[^\n]", p->categoria);
-	printf("+------------------------------------------------------------+\n");
-	
+    printf("+------------------------------------------------------------+\n");
+
+    // Abre o arquivo de produtos em modo de anexo para salvar o novo produto
     FILE *arq = fopen("produtos.txt", "a");
     if (arq == NULL) {
         printf("Erro ao abrir o arquivo!\n");
@@ -67,7 +69,7 @@ void cadastrarProduto(Produto *p) {
 }
 
 void listarProdutos() {
-	system("cls");
+    system("cls");
     FILE *arq = fopen("produtos.txt", "r");
     if (arq == NULL) {
         printf("Nenhum produto cadastrado.\n");
@@ -78,12 +80,12 @@ void listarProdutos() {
     printf("\n+------------------------------------------------------+\n");
     printf("| Código | Nome           | Preço    | Categoria       \n");
     printf("+------------------------------------------------------+\n");
-    
+
     while (fread(&p, sizeof(Produto), 1, arq) == 1) {
         printf("| %-6d | %-14s | %-8.2f | %-12s \n", p.codigo, p.nome, p.preco_por_kg, p.categoria);
     }
     printf("+------------------------------------------------------+\n");
 
     fclose(arq);
-    
 }
+
