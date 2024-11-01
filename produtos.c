@@ -89,3 +89,4 @@ void listarProdutos() {
     fclose(arq);
 }
 
+
