@@ -8,20 +8,25 @@
 
 // Função para registrar uma nova venda
 void registrarVenda() {
+	system("cls");
     Venda v;
     Produto p;
 
     listarProdutos();
-    printf("Digite o código do produto: ");
+    printf("+-------------------------------------+\n");
+    printf("| Digite o código do produto: ");
     scanf("%d", &v.codigo_produto);
 
     FILE *arq_prod = fopen("produtos.txt", "r");
     int encontrado = 0;
     while (fread(&p, sizeof(Produto), 1, arq_prod) == 1) {
         if (p.codigo == v.codigo_produto) {
-            printf("Produto: %s\n", p.nome);
-            printf("Peso do produto (kg): ");
+        	printf("+-------------------------------------+\n");
+            printf("| Produto: %s\n", p.nome);
+            printf("+-------------------------------------+\n");
+            printf("| Peso do produto (kg): ");
             scanf("%f", &v.peso);
+            printf("+-------------------------------------+\n");
             v.valor_total = v.peso * p.preco_por_kg;
             encontrado = 1;
             break;
@@ -48,6 +53,7 @@ void registrarVenda() {
 
 // Função para gerar relatório das vendas
 void gerarRelatorio() {
+	system("cls");
     FILE *arq = fopen("vendas.txt", "r");
     if (arq == NULL) {
         printf("Nenhuma venda registrada.\n");
