@@ -55,6 +55,10 @@ void cadastrarProduto(Produto *p) {
     scanf("%19[^\n]", p->categoria);
     printf("+------------------------------------------------------------+\n");
 
+	printf("| Quantidade: ");
+	scanf("%int", &p->quantidade);
+	printf("+------------------------------------------------------------+\n");
+
     // Abre o arquivo de produtos em modo de anexo para salvar o novo produto
     FILE *arq = fopen("produtos.txt", "a");
     if (arq == NULL) {
@@ -77,16 +81,14 @@ void listarProdutos() {
     }
 
     Produto p;
-    printf("\n+------------------------------------------------------+\n");
-    printf("| Código | Nome           | Preço    | Categoria       \n");
-    printf("+------------------------------------------------------+\n");
+    printf("\n+-----------------------------------------------------------------+\n");
+    printf("| Código | Nome           | Preço    | Categoria    | Quantidade   \n");
+    printf("+-----------------------------------------------------------------+\n");
 
     while (fread(&p, sizeof(Produto), 1, arq) == 1) {
-        printf("| %-6d | %-14s | %-8.2f | %-12s \n", p.codigo, p.nome, p.preco_por_kg, p.categoria);
+        printf("| %-6d | %-14s | %-8.2f | %-12s | %-6d \n", p.codigo, p.nome, p.preco_por_kg, p.categoria, p.quantidade);
     }
-    printf("+------------------------------------------------------+\n");
+    printf("+-----------------------------------------------------------------+\n");
 
     fclose(arq);
 }
-
-
