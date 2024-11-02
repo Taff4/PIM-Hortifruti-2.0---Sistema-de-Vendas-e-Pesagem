@@ -140,6 +140,7 @@ void cadastrarColaborador() {
 }
 
 void listarColaboradores() {
+	system("cls");
     printf("+------------------------------------+\n");
     printf("|       LISTA DE COLABORADORES       |\n");
     printf("+------------------------------------+\n");
