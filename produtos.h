@@ -7,6 +7,7 @@ typedef struct {
     char nome[50];
     float preco_por_kg;
     char categoria[20];
+    int quantidade;
 } Produto;
 
 // Função para cadastrar um produto
