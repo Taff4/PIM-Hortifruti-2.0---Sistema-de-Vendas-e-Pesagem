@@ -13,7 +13,6 @@ void registrarVenda() {
     Produto p;
 
     listarProdutos();
-    printf("+-------------------------------------+\n");
     printf("| Digite o código do produto: ");
     scanf("%d", &v.codigo_produto);
 
