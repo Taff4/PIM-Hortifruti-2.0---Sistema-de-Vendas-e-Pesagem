@@ -23,6 +23,7 @@ void registrarVenda(Venda *venda) {
     system("cls");
     Produto p;
     int primeira_venda = 1;
+    char input[100]; // Buffer para entrada do usuário
 
     // Array para armazenar produtos vendidos
     Venda vendas_registradas[100];
@@ -39,7 +40,14 @@ void registrarVenda(Venda *venda) {
 
         printf("+-------------------------------------+\n");
         printf("| Digite o código do produto: ");
-        scanf("%d", &venda->codigo_produto);
+        
+        fgets(input, sizeof(input), stdin); // Lê a entrada como string
+
+        // Tenta converter a entrada para um inteiro
+        if (sscanf(input, "%d", &venda->codigo_produto) != 1) {
+            printf("Entrada inválida! Por favor, digite um número válido.\n");
+            continue; // Volta ao início do loop se a entrada for inválida
+        }
 
         // Se o usuário digitar 0
         if (venda->codigo_produto == 0) {
@@ -75,8 +83,13 @@ void registrarVenda(Venda *venda) {
                 printf("| Produto: %s\n", p.nome);
                 printf("+-------------------------------------+\n");
                 printf("| Peso do produto (kg): ");
-                scanf("%f", &venda->peso);
-                printf("+-------------------------------------+\n");
+                
+                fgets(input, sizeof(input), stdin); // Lê a entrada como string
+                if (sscanf(input, "%f", &venda->peso) != 1) {
+                    printf("Entrada inválida! Por favor, digite um número válido para o peso.\n");
+                    continue; // Retorna ao início do loop se a entrada for inválida
+                }
+                
                 venda->valor_total = venda->peso * p.preco_por_kg;
                 strcpy(venda->nome_produto, p.nome);
                 strcpy(venda->colaborador, operador); // Copia o operador logado para o campo `colaborador` da venda
