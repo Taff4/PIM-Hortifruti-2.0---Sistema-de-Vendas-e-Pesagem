@@ -3,17 +3,18 @@
 
 // Estrutura que define os atributos de um Produto
 typedef struct {
-    int codigo;
-    char nome[50];
-    float preco_por_kg;
-    char categoria[20];
-    int quantidade;
+    int codigo;               // Código único do produto
+    char nome[50];           // Nome do produto
+    float preco_por_kg;      // Preço por kg do produto
+    char categoria[20];      // Categoria do produto
+    int quantidade;           // Campo para a quantidade em estoque (alterado para int)
 } Produto;
 
 // Função para cadastrar um produto
-void cadastrarProduto();
+void cadastrarProduto(Produto *p);
 
 // Função para listar produtos cadastrados
 void listarProdutos();
 
-#endif
+#endif // PRODUTOS_H
+
