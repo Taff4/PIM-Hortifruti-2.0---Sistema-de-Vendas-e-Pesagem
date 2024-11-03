@@ -5,22 +5,9 @@
 #include <time.h>
 #include "produtos.h"
 #include "vendas.h"
+#include "colaboradores.h"
 
 #define LIMPA_BUFFER fflush(stdin);
-
-#define MAX_COLABORADORES 100
-char colaboradores[MAX_COLABORADORES][20] = {"Nicole", "Rafael", "Matheus", "Guilherme", "Nicolas", "Khalil"};
-int num_colaboradores = 6;
-char operador[20];
-
-// Protótipos de funções
-void exibirDataHora();
-void salvarColaboradores();
-void carregarColaboradores();
-int login();
-int autenticarAdministrador();  // Declaração da função autenticarAdministrador
-void cadastrarColaborador();
-void listarColaboradores();
 
 void exibirDataHora() {
     time_t agora = time(NULL);
@@ -32,122 +19,6 @@ void exibirDataHora() {
            dataHora->tm_mday, dataHora->tm_mon + 1, dataHora->tm_year + 1900);
     printf("| Hora: %02d:%02d                 \n", 
            dataHora->tm_hour, dataHora->tm_min);
-}
-
-void salvarColaboradores() {
-    FILE *arquivo = fopen("colaboradores.txt", "w");
-    if (arquivo == NULL) {
-        printf("Erro ao salvar colaboradores.\n");
-        return;
-    }
-    for (int i = 0; i < num_colaboradores; i++) {
-        fprintf(arquivo, "%s\n", colaboradores[i]);
-    }
-    fclose(arquivo);
-}
-
-void carregarColaboradores() {
-    FILE *arquivo = fopen("colaboradores.txt", "r");
-    if (arquivo == NULL) {
-        printf("Arquivo de colaboradores não encontrado. Criando arquivo padrão...\n");
-        salvarColaboradores();
-        return;
-    }
-    num_colaboradores = 0;
-    while (fscanf(arquivo, "%19s", colaboradores[num_colaboradores]) != EOF && num_colaboradores < MAX_COLABORADORES) {
-        num_colaboradores++;
-    }
-    fclose(arquivo);
-}
-
-int login() {
-    char usuario[20], senha[10];
-    int tentativas = 3;
-    int i;
-
-    while (tentativas > 0) {
-        system("cls");
-        printf("+--------------------------------+\n");
-        printf("|       SISTEMA DE LOGIN         |\n");
-        printf("+--------------------------------+\n");
-        printf("Usuário: ");
-        LIMPA_BUFFER
-        scanf("%19s", usuario);
-        printf("Senha: ");
-        LIMPA_BUFFER
-        scanf("%9s", senha);
-
-        if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
-            strcpy(operador, "Administrador");
-            return 2;
-        } else {
-            for (i = 0; i < num_colaboradores; i++) {
-                if (strcmp(usuario, colaboradores[i]) == 0 && strcmp(senha, "123") == 0) {
-                    strcpy(operador, usuario);
-                    return 1;
-                }
-            }
-        }
-        
-        tentativas--;
-        printf("\n[ERRO] Usuário ou senha incorretos. Tentativas restantes: %d\n", tentativas);
-        system("pause");
-    }
-
-    printf("Número de tentativas excedido. Encerrando o sistema.\n");
-    return 0;
-}
-
-int autenticarAdministrador() {
-    char usuario[20], senha[10];
-
-    printf("Para acessar essa opção, você precisa de permissão de administrador.\n");
-    printf("Digite '0' para voltar ao menu principal.\n");
-    printf("Usuário: ");
-    LIMPA_BUFFER
-    scanf("%19s", usuario);
-    if (strcmp(usuario, "0") == 0) return 0;
-
-    printf("Senha: ");
-    LIMPA_BUFFER
-    scanf("%9s", senha);
-
-    if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
-        return 1;
-    } else {
-        printf("[ERRO] Usuário ou senha de administrador incorretos.\n");
-        return 0;
-    }
-}
-
-void cadastrarColaborador() {
-    char novoUsuario[20];
-    char novaSenha[10];
-
-    printf("Digite o nome do novo colaborador(a) (ou '0' para cancelar): ");
-    LIMPA_BUFFER
-    scanf("%19s", novoUsuario);
-    if (strcmp(novoUsuario, "0") == 0) return;
-
-    printf("Digite a senha do novo colaborador(a): ");
-    LIMPA_BUFFER
-    scanf("%9s", novaSenha);
-
-    strcpy(colaboradores[num_colaboradores], novoUsuario);
-    num_colaboradores++;
-    salvarColaboradores();
-    printf("Novo colaborador(a) '%s' cadastrado com sucesso.\n", novoUsuario);
-}
-
-void listarColaboradores() {
-	system("cls");
-    printf("+------------------------------------+\n");
-    printf("|       LISTA DE COLABORADORES       |\n");
-    printf("+------------------------------------+\n");
-    for (int i = 0; i < num_colaboradores; i++) {
-        printf("| %-32s |\n", colaboradores[i]);
-    }
-    printf("+------------------------------------+\n");
 }
 
 int main(void) {
@@ -204,6 +75,7 @@ int main(void) {
                     listarProdutos();
                     break;
                 case '3':
+                    strcpy(venda.colaborador, operador); // Copia o operador logado para o campo `colaborador` da venda
                     registrarVenda(&venda);
                     break;
                 case '4':
@@ -233,6 +105,7 @@ int main(void) {
                     listarProdutos();
                     break;
                 case '3':
+                    strcpy(venda.colaborador, operador); // Copia o operador logado para o campo `colaborador` da venda
                     registrarVenda(&venda);
                     break;
                 case '4':
@@ -250,6 +123,6 @@ int main(void) {
         }
         system("pause");
     } while ((acesso == 2 && opcao != '7') || (acesso == 1 && opcao != '5'));
-
+    
     return 0;
 }
