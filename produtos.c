@@ -4,9 +4,59 @@
 #include <ctype.h>
 #include <windows.h>
 #include "produtos.h"
-
 #define LIMPA_BUFFER while(getchar() != '\n')
 #define TEMPO_ERRO 3000
+
+
+// Outras funções de produtos já existentes...
+
+void atualizarOuRemoverProduto(int codigo_produto, float peso_vendido) {
+    FILE *arq_prod = fopen("produtos.txt", "r+b");
+    FILE *temp_arq = fopen("temp_produtos.txt", "w+b");
+    Produto p;
+    int encontrado = 0;
+
+    if (!arq_prod || !temp_arq) {
+        printf("Erro ao abrir os arquivos de produtos!\n");
+        if (arq_prod) fclose(arq_prod);
+        if (temp_arq) fclose(temp_arq);
+        return;
+    }
+
+    // Lê os produtos do arquivo original e escreve no arquivo temporário
+    while (fread(&p, sizeof(Produto), 1, arq_prod) == 1) {
+        if (p.codigo == codigo_produto) {
+            p.quantidade -= peso_vendido;  // Reduz a quantidade com base no peso vendido
+            encontrado = 1;
+            if (p.quantidade > 0) {
+                fwrite(&p, sizeof(Produto), 1, temp_arq);  // Mantém o produto atualizado no novo arquivo
+            } else {
+                printf("Produto %s esgotado e removido do estoque.\n", p.nome);
+                // Não grava o produto no arquivo temporário, efetivamente removendo-o
+            }
+        } else {
+            fwrite(&p, sizeof(Produto), 1, temp_arq);  // Copia os outros produtos
+        }
+    }
+
+    fclose(arq_prod);
+    fclose(temp_arq);
+
+    // Substitui o arquivo original pelo temporário
+    if (remove("produtos.txt") != 0) {
+        perror("Erro ao remover o arquivo original");
+    }
+    if (rename("temp_produtos.txt", "produtos.txt") != 0) {
+        perror("Erro ao renomear o arquivo temporário");
+    }
+
+    if (!encontrado) {
+        printf("Produto não encontrado para atualização.\n");
+    } else {
+        printf("Quantidade do produto atualizada com sucesso.\n");
+    }
+}
+
 
 // Função para verificar se um produto já existe pelo código
 int produtoExiste(int codigo) {
@@ -22,6 +72,22 @@ int produtoExiste(int codigo) {
     }
     fclose(arq);
     return 0; // Produto não existe
+}
+
+void verificarConteudoArquivo() {
+    FILE *arq = fopen("produtos.txt", "rb");
+    if (arq == NULL) {
+        printf("Erro ao abrir o arquivo para verificação.\n");
+        return;
+    }
+
+    Produto p;
+    printf("Conteúdo do arquivo:\n");
+    while (fread(&p, sizeof(Produto), 1, arq) == 1) {
+        printf("Código: %d, Nome: %s, Preço: %.2f, Categoria: %s, Quantidade: %d\n",
+               p.codigo, p.nome, p.preco_por_kg, p.categoria, p.quantidade);
+    }
+    fclose(arq);
 }
 
 // Função para verificar se um produto já existe pelo nome
@@ -53,13 +119,14 @@ void mostrarCabecalhoListaProdutos() {
     printf("+--------------------------------------------------------------------------+\n");
 }
 
-// Função para coletar dados do produto
+
+
 int coletarDadosProduto(Produto *p) {
     int codigo = -1;
     float preco = -1;
     int quantidade = -1;
 
-    mostrarCabecalhoCadastro(); // Garantindo que o cabeçalho apareça sempre no início
+    mostrarCabecalhoCadastro(); // Exibe o cabeçalho
 
     while (codigo < 0) {
         printf("\nDigite o código do produto (ou '0' para retornar ao menu): ");
@@ -83,7 +150,7 @@ int coletarDadosProduto(Produto *p) {
     printf("\n+------------------------------------------------------------+\n");
     printf("\n| Nome do produto: ");
     fgets(p->nome, sizeof(p->nome), stdin);
-    p->nome[strcspn(p->nome, "\n")] = 0;
+    p->nome[strcspn(p->nome, "\n")] = 0; // Remove newline
 
     // Verifica se o nome do produto já existe
     if (nomeProdutoExiste(p->nome)) {
@@ -106,7 +173,7 @@ int coletarDadosProduto(Produto *p) {
 
     printf("| Categoria: ");
     fgets(p->categoria, sizeof(p->categoria), stdin);
-    p->categoria[strcspn(p->categoria, "\n")] = 0;
+    p->categoria[strcspn(p->categoria, "\n")] = 0; // Remove newline
 
     while (quantidade < 0) {
         printf("| Quantidade em estoque (kg): ");
@@ -132,11 +199,9 @@ void cadastrarProduto(Produto *p) {
 
         int resultadoColeta = coletarDadosProduto(p);
         if (resultadoColeta == 0) {
-            // Se o usuário escolher voltar ao menu, interrompe o loop e sai da função
-            return;
+            return; // Se o usuário escolher voltar ao menu
         } else if (resultadoColeta == -1) {
-            // Se a coleta de dados falhar (produto duplicado), reinicia o processo
-            continue;
+            continue; // Se a coleta de dados falhar
         }
 
         printf("\n+------------------------------------------------------------+\n");
@@ -165,6 +230,7 @@ void cadastrarProduto(Produto *p) {
             return;
         }
 
+        // Grava o produto
         if (fwrite(p, sizeof(Produto), 1, arq) != 1) {
             printf("Erro ao salvar o produto!\n");
         } else {
@@ -180,10 +246,10 @@ void cadastrarProduto(Produto *p) {
     }
 }
 
-// Função para listar produtos cadastrados
-void listarProdutos() {
+// Função para listar produtos
+void listarProdutos(int menu) {
     system("cls");
-    mostrarCabecalhoListaProdutos(); // Exibe o cabeçalho da lista de produtos
+    mostrarCabecalhoListaProdutos();
     FILE *arq = fopen("produtos.txt", "rb");
     if (arq == NULL) {
         printf("Nenhum produto cadastrado.\n");
@@ -208,48 +274,7 @@ void listarProdutos() {
 
     printf("+--------------------------------------------------------------------------+\n");
     fclose(arq);
-
-    // Adicionar opção de excluir produto
-    printf("Para excluir um produto, digite 0 e pressione Enter.\nPara continuar a operação, digite 1: ");
-    char opcao;
-    scanf(" %c", &opcao);
-    
-    if (opcao == '0') {
-        int codigo;
-        printf("Digite o código do produto a ser excluído: ");
-        scanf("%d", &codigo);
-        LIMPA_BUFFER;
-
-        // Verifica login antes de remover o produto
-        char usuario[20], senha[20];
-        printf("Digite o login: ");
-        fgets(usuario, sizeof(usuario), stdin);
-        usuario[strcspn(usuario, "\n")] = 0; // Remove newline
-        printf("Digite a senha: ");
-        fgets(senha, sizeof(senha), stdin);
-        senha[strcspn(senha, "\n")] = 0; // Remove newline
-
-        if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
-            char confirmacao;
-            printf("Tem certeza que deseja excluir o produto com código %d? (s/n): ", codigo);
-            scanf(" %c", &confirmacao);
-            LIMPA_BUFFER;
-
-            if (tolower(confirmacao) == 's') {
-                removerProduto(codigo);
-            } else {
-                printf("Operação de exclusão cancelada.\n");
-            }
-        } else {
-            printf("Login ou senha incorretos. A exclusão foi cancelada.\n");
-        }
-    } else if (opcao == '1') {
-        printf("Voltando ao menu principal...\n");
-    } else {
-        printf("Opção inválida. Voltando ao menu principal...\n");
-    }
-
-    printf("Pressione qualquer tecla para continuar...\n");
+    printf("Pressione a tecla enter para continuar...\n");
     getchar(); // Espera pela entrada do usuário
 }
 
@@ -352,5 +377,4 @@ void atualizarProduto(Produto *p) {
         printf("Produto não encontrado.\n");
     }
 }
-
 
