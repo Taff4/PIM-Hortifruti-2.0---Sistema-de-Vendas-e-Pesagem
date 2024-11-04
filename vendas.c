@@ -5,9 +5,11 @@
 #include <windows.h>
 #include "produtos.h"
 #include "vendas.h"
-#include "colaboradores.h" // Incluindo o cabeçalho para acesso ao colaborador
+#include "colaboradores.h" // Esta inclusão já traz operador[50]
 
 #define LIMPA_BUFFER while (getchar() != '\n' && getchar() != EOF)
+
+
 
 // Função para obter a data e hora atuais
 void obterDataHora(char *buffer, int tamanho) {
@@ -18,29 +20,34 @@ void obterDataHora(char *buffer, int tamanho) {
              tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
-// Função para registrar uma nova venda com o menu atualizado
+// Função para registrar uma nova venda
 void registrarVenda(Venda *venda) {
     system("cls");
     Produto p;
     int primeira_venda = 1;
-    char input[100]; // Buffer para entrada do usuário
-    venda->codigo_venda = rand(); // Gerar um código único para a venda
+    char input[100];
+    venda->codigo_venda = rand();
+    
+    void mostrarRegistrarVenda() {
+        printf("+---------------------------------------------------------+\n");
+        printf("|                          REGISTRAR VENDA                 \n");
+        printf("+---------------------------------------------------------+\n");
+    }
 
-    // Array para armazenar produtos vendidos
     Venda vendas_registradas[100];
     int total_vendas = 0;
 
     while (1) {
         listarProdutos();
-
+        mostrarRegistrarVenda();
         if (primeira_venda) {
             printf("Para cancelar e voltar ao menu principal, digite '0'.\n");
         }
-
+        
         printf("+-------------------------------------+\n");
         printf("| Digite o código do produto para registrar a venda: ");
         
-        fgets(input, sizeof(input), stdin); // Lê a entrada como string
+        fgets(input, sizeof(input), stdin);
 
         if (sscanf(input, "%d", &venda->codigo_produto) != 1 || venda->codigo_produto < 0) {
             printf("Entrada inválida! Por favor, digite um número válido.\n");
@@ -71,7 +78,7 @@ void registrarVenda(Venda *venda) {
             }
         }
 
-        FILE *arq_prod = fopen("produtos.txt", "r");
+        FILE *arq_prod = fopen("produtos.txt", "r+b"); // Abre para leitura e escrita
         int encontrado = 0;
         while (fread(&p, sizeof(Produto), 1, arq_prod) == 1) {
             if (p.codigo == venda->codigo_produto) {
@@ -90,7 +97,11 @@ void registrarVenda(Venda *venda) {
                 strcpy(venda->nome_produto, p.nome);
                 strcpy(venda->colaborador, operador);
                 encontrado = 1;
-                break;
+
+                // Atualiza a quantidade usando a função centralizada
+                atualizarOuRemoverProduto(venda->codigo_produto, venda->peso);
+                
+                break; // Saia do loop, pois o produto foi encontrado
             }
         }
         fclose(arq_prod);
@@ -121,6 +132,7 @@ void registrarVenda(Venda *venda) {
         }
     }
 }
+
 
 // Função para gerar o relatório de vendas, agrupado por colaborador
 void gerarRelatorio() {
@@ -175,3 +187,4 @@ void gerarRelatorio() {
     }
 
 }
+
