@@ -3,22 +3,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 #include "produtos.h"
 #include "vendas.h"
 #include "colaboradores.h"
+#include "menu.h"
 
-#define LIMPA_BUFFER fflush(stdin);
+// Função para exibir mensagens de erro
+void exibirErro(const char *mensagem) {
+    printf("Erro: %s\n", mensagem);
+    Beep(500, 500);  // Emite um som para chamar a atenção para o erro
+    Sleep(1000);     // Pausa por 1 segundo para permitir que o usuário leia a mensagem
+    system("cls");   // Limpa a tela após a mensagem de erro
+}
 
 void exibirDataHora() {
     time_t agora = time(NULL);
     struct tm *dataHora = localtime(&agora);
-    dataHora->tm_hour -= 3;
+    dataHora->tm_hour -= 3; // Ajusta para o horário de Brasília
     mktime(dataHora);
 
     printf("| Data: %02d/%02d/%d               \n", 
            dataHora->tm_mday, dataHora->tm_mon + 1, dataHora->tm_year + 1900);
     printf("| Hora: %02d:%02d                 \n", 
            dataHora->tm_hour, dataHora->tm_min);
+}
+
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 }
 
 int main(void) {
@@ -37,35 +50,10 @@ int main(void) {
     char opcao;
 
     do {
-        system("cls");
-        printf("+------------------------------------+\n");
-        printf("|        SISTEMA VIVA FRUIT          |\n");
-        printf("+------------------------------------+\n");
-        printf("| Operador(a): %-24s \n", operador);
-        exibirDataHora();
-        printf("+------------------------------------+\n");
+        exibirMenu(acesso);
+        opcao = escolherOpcao(acesso);
 
-        if (acesso == 2) {
-            printf("| 1. Cadastrar Produto               |\n");
-            printf("| 2. Lista de Produtos               |\n");
-            printf("| 3. Registrar Venda                 |\n");
-            printf("| 4. Gerar Relatório de Vendas       |\n");
-            printf("| 5. Cadastrar Colaborador(a)        |\n");
-            printf("| 6. Listar Colaboradores            |\n");
-            printf("| 7. Sair                            |\n");
-        } else {
-            printf("| 1. Cadastrar Produto               |\n");
-            printf("| 2. Lista de Produtos               |\n");
-            printf("| 3. Registrar Venda                 |\n");
-            printf("| 4. Gerar Relatório de Vendas       |\n");
-            printf("| 5. Sair                            |\n");
-        }
-        printf("+------------------------------------+\n");
-
-        printf("Escolha uma opção: ");
-        LIMPA_BUFFER
-        scanf("%c", &opcao);
-
+        // Processa a opção selecionada
         if (acesso == 2) {
             switch (opcao) {
                 case '1':
@@ -90,9 +78,6 @@ int main(void) {
                 case '7':
                     printf("Saindo do sistema...\n");
                     break;
-                default:
-                    printf("Opção inválida! Tente novamente.\n");
-                    break;
             }
         } else {
             switch (opcao) {
@@ -116,13 +101,13 @@ int main(void) {
                 case '5':
                     printf("Saindo do sistema...\n");
                     break;
-                default:
-                    printf("Opção inválida! Tente novamente.\n");
-                    break;
             }
         }
+
         system("pause");
+
     } while ((acesso == 2 && opcao != '7') || (acesso == 1 && opcao != '5'));
     
     return 0;
 }
+
