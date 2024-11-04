@@ -6,8 +6,10 @@ typedef struct {
     char nome[50];
     float preco_por_kg;
     char categoria[30];
-    int quantidade;
+    int quantidade; // Certifique-se de que esse campo existe
+    char operador[50];
 } Produto;
+
 
 // Verifica se um produto já existe com base no código fornecido.
 int produtoExiste(int codigo);
@@ -39,4 +41,7 @@ void removerProduto(int codigo);
 // Atualiza os dados de um produto existente.
 void atualizarProduto(Produto *p);
 
+void atualizarOuRemoverProduto(int codigo_produto, float quantidade_vendida);
+
 #endif // PRODUTOS_H
+
