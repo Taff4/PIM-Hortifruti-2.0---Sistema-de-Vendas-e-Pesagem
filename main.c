@@ -12,9 +12,9 @@
 // Função para exibir mensagens de erro
 void exibirErro(const char *mensagem) {
     printf("Erro: %s\n", mensagem);
-    Beep(500, 500);  // Emite um som para chamar a atenção para o erro
-    Sleep(1000);     // Pausa por 1 segundo para permitir que o usuário leia a mensagem
-    system("cls");   // Limpa a tela após a mensagem de erro
+    Beep(500, 500);
+    Sleep(1000);
+    system("cls");
 }
 
 void exibirDataHora() {
@@ -63,7 +63,7 @@ int main(void) {
                     listarProdutos();
                     break;
                 case '3':
-                    strcpy(venda.colaborador, operador); // Copia o operador logado para o campo `colaborador` da venda
+                    strcpy(venda.colaborador, operador);
                     registrarVenda(&venda);
                     break;
                 case '4':
@@ -76,7 +76,13 @@ int main(void) {
                     listarColaboradores();
                     break;
                 case '7':
+                    excluirProduto(); // Chama a função de exclusão de produto
+                    break;
+                case '8':
                     printf("Saindo do sistema...\n");
+                    break;
+                default:
+                    exibirErro("Opção inválida! Tente novamente."); // Para garantir que o programa não feche se uma opção inválida for escolhida
                     break;
             }
         } else {
@@ -90,7 +96,7 @@ int main(void) {
                     listarProdutos();
                     break;
                 case '3':
-                    strcpy(venda.colaborador, operador); // Copia o operador logado para o campo `colaborador` da venda
+                    strcpy(venda.colaborador, operador);
                     registrarVenda(&venda);
                     break;
                 case '4':
@@ -101,13 +107,19 @@ int main(void) {
                 case '5':
                     printf("Saindo do sistema...\n");
                     break;
+                default:
+                    exibirErro("Opção inválida! Tente novamente."); // Para garantir que o programa não feche se uma opção inválida for escolhida
+                    break;
             }
         }
 
         system("pause");
 
-    } while ((acesso == 2 && opcao != '7') || (acesso == 1 && opcao != '5'));
-    
+    } while ((acesso == 2 && opcao != '8') || (acesso == 1 && opcao != '5')); // Verificando a saída correta
+
     return 0;
 }
+
+
+
 
