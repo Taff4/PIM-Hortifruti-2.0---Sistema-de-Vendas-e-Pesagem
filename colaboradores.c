@@ -1,8 +1,9 @@
-// colaboradores.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "colaboradores.h"
+
+#define MAX_COLABORADORES 100
 
 char colaboradores[MAX_COLABORADORES][20] = {"Nicole", "Rafael", "Matheus", "Guilherme", "Nicolas", "Khalil"};
 int num_colaboradores = 6;
@@ -11,7 +12,7 @@ char operador[20];
 void carregarColaboradores() {
     FILE *arquivo = fopen("colaboradores.txt", "r");
     if (arquivo == NULL) {
-        printf("Arquivo de colaboradores n„o encontrado. Criando arquivo padr„o...\n");
+        printf("Arquivo de colaboradores n√£o encontrado. Criando arquivo padr√£o...\n");
         salvarColaboradores();
         return;
     }
@@ -37,75 +38,86 @@ void salvarColaboradores() {
 int login() {
     char usuario[20], senha[10];
     int tentativas = 3;
-    int i;
+    int autenticado = 0;
 
-    while (tentativas > 0) {
-        system("cls");
+    while (tentativas > 0 && !autenticado) {
+        // Exibe o cabe√ßalho do menu de login em cada tentativa
         printf("+--------------------------------+\n");
         printf("|       SISTEMA DE LOGIN         |\n");
         printf("+--------------------------------+\n");
-        printf("Usu·rio: ");
-        fflush(stdin);
-        scanf("%19s", usuario);
-        printf("Senha: ");
-        fflush(stdin);
-        scanf("%9s", senha);
+
+        printf("| Usu√°rio: ");
+        fgets(usuario, sizeof(usuario), stdin);
+        strtok(usuario, "\n");  // Remove a nova linha
+
+        printf("| Senha: ");
+        fgets(senha, sizeof(senha), stdin);
+        strtok(senha, "\n");  // Remove a nova linha
+        system("cls"); // Limpa a tela para manter a estrutura organizada
 
         if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
             strcpy(operador, "Administrador");
+            autenticado = 1;
             return 2;
-        } else {
-            for (i = 0; i < num_colaboradores; i++) {
-                if (strcmp(usuario, colaboradores[i]) == 0 && strcmp(senha, "123") == 0) {
-                    strcpy(operador, usuario);
-                    return 1;
-                }
+        } 
+
+        for (int i = 0; i < num_colaboradores; i++) {
+            if (strcmp(usuario, colaboradores[i]) == 0 && strcmp(senha, "123") == 0) {
+                strcpy(operador, usuario);
+                autenticado = 1;
+                return 1;
             }
         }
-        
+
         tentativas--;
-        printf("\n[ERRO] Usu·rio ou senha incorretos. Tentativas restantes: %d\n", tentativas);
-        system("pause");
+
+        // Exibe mensagem de erro abaixo do cabe√ßalho em caso de falha
+        printf("\n[ERRO] Usu√°rio ou senha incorretos. Tentativas restantes: %d\n\n", tentativas);
     }
 
-    printf("N˙mero de tentativas excedido. Encerrando o sistema.\n");
+    printf("N√∫mero de tentativas excedido. Encerrando o sistema.\n");
     return 0;
 }
 
 int autenticarAdministrador() {
     char usuario[20], senha[10];
 
-    printf("Para acessar essa opÁ„o, vocÍ precisa de permiss„o de administrador.\n");
+    printf("Para acessar essa op√ß√£o, voc√™ precisa de permiss√£o de administrador.\n");
     printf("Digite '0' para voltar ao menu principal.\n");
-    printf("Usu·rio: ");
-    fflush(stdin);
-    scanf("%19s", usuario);
+    printf("Usu√°rio: ");
+    fgets(usuario, sizeof(usuario), stdin);
+    strtok(usuario, "\n");  // Remove a nova linha
     if (strcmp(usuario, "0") == 0) return 0;
 
     printf("Senha: ");
-    fflush(stdin);
-    scanf("%9s", senha);
+    fgets(senha, sizeof(senha), stdin);
+    strtok(senha, "\n");  // Remove a nova linha
 
     if (strcmp(usuario, "adm") == 0 && strcmp(senha, "123") == 0) {
         return 1;
     } else {
-        printf("[ERRO] Usu·rio ou senha de administrador incorretos.\n");
+        printf("[ERRO] Usu√°rio ou senha de administrador incorretos.\n");
         return 0;
     }
 }
 
 void cadastrarColaborador() {
+    if (num_colaboradores >= MAX_COLABORADORES) {
+        printf("Erro: N√∫mero m√°ximo de colaboradores atingido.\n");
+        return;
+    }
+
     char novoUsuario[20];
     char novaSenha[10];
 
     printf("Digite o nome do novo colaborador(a) (ou '0' para cancelar): ");
-    fflush(stdin);
-    scanf("%19s", novoUsuario);
+    fgets(novoUsuario, sizeof(novoUsuario), stdin);
+    strtok(novoUsuario, "\n");  // Remove a nova linha
     if (strcmp(novoUsuario, "0") == 0) return;
 
     printf("Digite a senha do novo colaborador(a): ");
-    fflush(stdin);
-    scanf("%9s", novaSenha);
+    fgets(novaSenha, sizeof(novaSenha), stdin);
+    strtok(novaSenha, "\n");  // Remove a nova linha
 
     strcpy(colaboradores[num_colaboradores], novoUsuario);
     num_colaboradores++;
@@ -114,7 +126,6 @@ void cadastrarColaborador() {
 }
 
 void listarColaboradores() {
-    system("cls");
     printf("+------------------------------------+\n");
     printf("|       LISTA DE COLABORADORES       |\n");
     printf("+------------------------------------+\n");
@@ -123,4 +134,3 @@ void listarColaboradores() {
     }
     printf("+------------------------------------+\n");
 }
-
