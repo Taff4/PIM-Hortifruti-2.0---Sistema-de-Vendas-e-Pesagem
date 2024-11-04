@@ -143,12 +143,11 @@ void gerarRelatorio() {
     }
     fclose(arq);
 
-    printf("\n+-----------------------------------------------------------------------+\n");
-    printf("|                       Relatório de Vendas                             |\n");
-    printf("+-----------------------------------------------------------------------+\n");
-    printf("| Data e Hora do Relatório: %-45s |\n", data_hora);
-    printf("+-----------------------------------------------------------------------+\n");
-
+    printf("\n+-----------------------------------------------------------------------------+\n");
+    printf("|                       Relatório de Vendas                                     |\n");
+    printf("\n+-----------------------------------------------------------------------------+\n");
+    printf("| Data e Hora do Relatório: %-45s \n", data_hora);
+    printf("\n+-----------------------------------------------------------------------------+\n");
     char colaborador_atual[50] = "";
     float total_colaborador = 0.0;
 
@@ -157,27 +156,22 @@ void gerarRelatorio() {
 
         if (strcmp(colaborador_atual, v.colaborador) != 0) {
             if (i > 0) {
-                printf("| %-66s Total: R$ %-10.2f |\n", "", total_colaborador);
-                printf("+-----------------------------------------------------------------------+\n");
+                
+                printf("\n+-----------------------------------------------------------------------------+\n");
             }
             strcpy(colaborador_atual, v.colaborador);
             total_colaborador = 0.0;
 
-            printf("| Colaborador: %-58s |\n", colaborador_atual);
-            printf("+-----------------------------------------------------------------------+\n");
-            printf("| Código | Produto       | Peso (kg) | Valor Total (R$) | Data          |\n");
-            printf("+--------+---------------+-----------+-------------------+---------------+\n");
+            printf("| Colaborador: %-58s\n", colaborador_atual);
+            printf("\n+-----------------------------------------------------------------------------+\n");
+            printf("| Código | Produto       | Peso (kg) | Valor Total (R$) | Data          \n");
+            printf("\n+-----------------------------------------------------------------------------+\n");
         }
 
-        printf("| %-6d | %-13s | %-9.2f | %-17.2f | %-13s |\n",
+        printf("| %-6d | %-13s | %-9.2f | %-17.2f| %-13s \n",
                v.codigo_produto, v.nome_produto, v.peso, v.valor_total, v.data);
         total_colaborador += v.valor_total;
+        printf("\n+-----------------------------------------------------------------------------+\n");
     }
 
-    if (total_vendas > 0) {
-        printf("|%-66sTotal: R$ %-10.2f |\n", "", total_colaborador);
-        printf("+-----------------------------------------------------------------------+\n");
-    }
 }
-
-
