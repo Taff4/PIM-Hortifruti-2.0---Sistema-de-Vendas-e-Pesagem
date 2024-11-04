@@ -8,7 +8,7 @@ extern char colaboradores[MAX_COLABORADORES][20];
 extern int num_colaboradores;
 extern char operador[20];
 
-// Protótipos de funções
+// ProtÃ³tipos de funÃ§Ãµes
 void carregarColaboradores();
 void salvarColaboradores();
 int login();
@@ -17,4 +17,3 @@ void cadastrarColaborador();
 void listarColaboradores();
 
 #endif // COLABORADORES_H
-
