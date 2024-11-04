@@ -1,20 +1,42 @@
 #ifndef PRODUTOS_H
 #define PRODUTOS_H
 
-// Estrutura que define os atributos de um Produto
 typedef struct {
-    int codigo;               // Código único do produto
-    char nome[50];           // Nome do produto
-    float preco_por_kg;      // Preço por kg do produto
-    char categoria[20];      // Categoria do produto
-    int quantidade;           // Campo para a quantidade em estoque (alterado para int)
+    int codigo;
+    char nome[50];
+    float preco_por_kg;
+    char categoria[30];
+    int quantidade;
 } Produto;
 
-// Função para cadastrar um produto
+// Verifica se um produto já existe com base no código fornecido.
+int produtoExiste(int codigo);
+
+// Exibe uma mensagem de erro.
+void exibirErro(const char *mensagem);
+
+// Mostra o cabeçalho do cadastro de produtos.
+void mostrarCabecalhoCadastro();
+
+// Coleta os dados do produto do usuário.
+int coletarDadosProduto(Produto *p); // Modificado para retornar int
+
+// Cadastra um novo produto.
 void cadastrarProduto(Produto *p);
 
-// Função para listar produtos cadastrados
+// Lista todos os produtos cadastrados.
 void listarProdutos();
 
-#endif // PRODUTOS_H
+// Carrega e exibe produtos de um arquivo.
+void carregarProdutos();
 
+// Busca um produto pelo código e retorna um ponteiro para ele.
+Produto* buscarProduto(int codigo);
+
+// Remove um produto pelo código.
+void removerProduto(int codigo);
+
+// Atualiza os dados de um produto existente.
+void atualizarProduto(Produto *p);
+
+#endif // PRODUTOS_H
