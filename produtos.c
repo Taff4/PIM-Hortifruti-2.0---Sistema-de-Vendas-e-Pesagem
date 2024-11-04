@@ -46,6 +46,12 @@ void mostrarCabecalhoCadastro() {
     printf("|                   CADASTRO DE PRODUTO                      |\n");
     printf("+------------------------------------------------------------+\n");
 }
+// Função para mostrar o cabeçalho da lista de produtos
+void mostrarCabecalhoListaProdutos() {
+    printf("+--------------------------------------------------------------------------+\n");
+    printf("|                          LISTA DE PRODUTOS                               |\n");
+    printf("+--------------------------------------------------------------------------+\n");
+}
 
 // Função para coletar dados do produto
 int coletarDadosProduto(Produto *p) {
@@ -177,6 +183,7 @@ void cadastrarProduto(Produto *p) {
 // Função para listar produtos cadastrados
 void listarProdutos() {
     system("cls");
+    mostrarCabecalhoListaProdutos(); // Exibe o cabeçalho da lista de produtos
     FILE *arq = fopen("produtos.txt", "rb");
     if (arq == NULL) {
         printf("Nenhum produto cadastrado.\n");
@@ -203,7 +210,7 @@ void listarProdutos() {
     fclose(arq);
 
     // Adicionar opção de excluir produto
-    printf("Para excluir um produto, digite 0 e pressione Enter.\nPara voltar ao menu, digite 1: ");
+    printf("Para excluir um produto, digite 0 e pressione Enter.\nPara continuar a operação, digite 1: ");
     char opcao;
     scanf(" %c", &opcao);
     
@@ -345,3 +352,5 @@ void atualizarProduto(Produto *p) {
         printf("Produto não encontrado.\n");
     }
 }
+
+
