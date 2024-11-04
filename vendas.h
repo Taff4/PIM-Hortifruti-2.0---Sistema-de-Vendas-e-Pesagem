@@ -22,5 +22,3 @@ void gerarRelatorio();
 void atualizarVenda(int codigo_venda);
 
 #endif
-
-
