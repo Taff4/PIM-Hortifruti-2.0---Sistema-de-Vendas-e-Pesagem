@@ -153,6 +153,7 @@ void gerarRelatorio() {
     Venda vendas_registradas[100];
     int total_vendas = 0;
 
+    // Carregar todas as vendas
     while (fread(&v, sizeof(Venda), 1, arq) == 1) {
         vendas_registradas[total_vendas++] = v;
     }
@@ -163,32 +164,42 @@ void gerarRelatorio() {
     printf("\n+----------------------------------------------------------------------------+\n");
     printf("| Data e Hora do Relatório: %-45s ", data_hora);
     printf("\n+----------------------------------------------------------------------------+\n");
+
     char colaborador_atual[50] = "";
     float total_colaborador = 0.0;
 
     for (int i = 0; i < total_vendas; i++) {
         v = vendas_registradas[i];
 
+        // Se o colaborador mudou, exibe o total do colaborador anterior
         if (strcmp(colaborador_atual, v.colaborador) != 0) {
             if (i > 0) {
                 printf("\n+----------------------------------------------------------------------------+\n");
+                printf("| Total de vendas do colaborador: %-44s \n| R$ %-11.2f", colaborador_atual, total_colaborador);
+                printf("\n+----------------------------------------------------------------------------+\n\n");
             }
+
+            // Atualiza o colaborador atual e reinicia o total
             strcpy(colaborador_atual, v.colaborador);
             total_colaborador = 0.0;
 
-            printf("| Colaborador: %-58s\n|", colaborador_atual);
-            printf("\n+----------------------------------------------------------------------------+\n");
-            printf("| Código | Produto      | Peso (kg)  | Valor Total (R$)  | Data e Hora         ");
-            printf("\n+----------------------------------------------------------------------------+\n");
+            // Cabeçalho para o novo colaborador
+            printf("| Colaborador: %-58s\n", colaborador_atual);
+            printf("+----------------------------------------------------------------------------+\n");
+            printf("| Código | Produto      | Peso (kg)  | Valor Total (R$)  | Data e Hora       |\n");
+            printf("+----------------------------------------------------------------------------+\n");
         }
 
-        // Exibe o código do produto, nome, peso, valor total e data/hora da venda
+        // Exibe os detalhes da venda
         printf("| %-6d | %-12s | %-10.2f | %-17.2f | %-19s \n", 
                v.codigo_produto, v.nome_produto, v.peso, v.valor_total, v.data);
+
+        // Acumula o total de vendas do colaborador atual
         total_colaborador += v.valor_total;
     }
 
+    // Exibe o total do último colaborador
     printf("\n+----------------------------------------------------------------------------+\n");
-    printf("|Total de vendas do colaborador: %-44s \n|R$ %-11.2f", colaborador_atual, total_colaborador);
+    printf("| Total de vendas do colaborador: %-44s \n| R$ %-11.2f", colaborador_atual, total_colaborador);
     printf("\n+----------------------------------------------------------------------------+\n");
 }
