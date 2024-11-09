@@ -44,4 +44,3 @@ void atualizarProduto(Produto *p);
 void atualizarOuRemoverProduto(int codigo_produto, float quantidade_vendida);
 
 #endif // PRODUTOS_H
-
