@@ -1,4 +1,4 @@
-#ifndef VENDAS_H
+ #ifndef VENDAS_H
 #define VENDAS_H
 
 // Estrutura que define os atributos de uma Venda
