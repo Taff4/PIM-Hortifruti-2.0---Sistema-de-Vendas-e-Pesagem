@@ -5,11 +5,9 @@
 #include <windows.h>
 #include "produtos.h"
 #include "vendas.h"
-#include "colaboradores.h" // Esta inclusão já traz operador[50]
+#include "colaboradores.h"  // Esta inclusão já traz operador[50]
 
 #define LIMPA_BUFFER while (getchar() != '\n' && getchar() != EOF)
-
-
 
 // Função para obter a data e hora atuais
 void obterDataHora(char *buffer, int tamanho) {
@@ -20,7 +18,6 @@ void obterDataHora(char *buffer, int tamanho) {
              tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
-// Função para registrar uma nova venda
 void registrarVenda(Venda *venda) {
     system("cls");
     Produto p;
@@ -100,7 +97,13 @@ void registrarVenda(Venda *venda) {
 
                 // Atualiza a quantidade usando a função centralizada
                 atualizarOuRemoverProduto(venda->codigo_produto, venda->peso);
-                
+
+                // Verifica se o estoque ainda é suficiente
+                if (p.quantidade <= 0) {
+                    printf("Não é possível registrar a venda, o produto %s está esgotado.\n", p.nome);
+                    continue;  // Volta ao loop de vendas
+                }
+
                 break; // Saia do loop, pois o produto foi encontrado
             }
         }
@@ -111,6 +114,7 @@ void registrarVenda(Venda *venda) {
             continue;
         }
 
+        // Captura a data e hora atual
         obterDataHora(venda->data, sizeof(venda->data));
 
         FILE *arq_vendas = fopen("vendas.txt", "a");
@@ -134,7 +138,6 @@ void registrarVenda(Venda *venda) {
 }
 
 
-// Função para gerar o relatório de vendas, agrupado por colaborador
 void gerarRelatorio() {
     system("cls");
     FILE *arq = fopen("vendas.txt", "r");
@@ -155,11 +158,11 @@ void gerarRelatorio() {
     }
     fclose(arq);
 
-    printf("\n+-----------------------------------------------------------------------------+\n");
-    printf("|                       Relatório de Vendas                                     |\n");
-    printf("\n+-----------------------------------------------------------------------------+\n");
-    printf("| Data e Hora do Relatório: %-45s \n", data_hora);
-    printf("\n+-----------------------------------------------------------------------------+\n");
+    printf("\n+----------------------------------------------------------------------------+\n");
+    printf("|                       Relatório de Vendas                                  |");
+    printf("\n+----------------------------------------------------------------------------+\n");
+    printf("| Data e Hora do Relatório: %-45s ", data_hora);
+    printf("\n+----------------------------------------------------------------------------+\n");
     char colaborador_atual[50] = "";
     float total_colaborador = 0.0;
 
@@ -168,23 +171,24 @@ void gerarRelatorio() {
 
         if (strcmp(colaborador_atual, v.colaborador) != 0) {
             if (i > 0) {
-                
-                printf("\n+-----------------------------------------------------------------------------+\n");
+                printf("\n+----------------------------------------------------------------------------+\n");
             }
             strcpy(colaborador_atual, v.colaborador);
             total_colaborador = 0.0;
 
-            printf("| Colaborador: %-58s\n", colaborador_atual);
-            printf("\n+-----------------------------------------------------------------------------+\n");
-            printf("| Código | Produto       | Peso (kg) | Valor Total (R$) | Data          \n");
-            printf("\n+-----------------------------------------------------------------------------+\n");
+            printf("| Colaborador: %-58s\n|", colaborador_atual);
+            printf("\n+----------------------------------------------------------------------------+\n");
+            printf("| Código | Produto      | Peso (kg)  | Valor Total (R$)  | Data e Hora         ");
+            printf("\n+----------------------------------------------------------------------------+\n");
         }
 
-        printf("| %-6d | %-13s | %-9.2f | %-17.2f| %-13s \n",
+        // Exibe o código do produto, nome, peso, valor total e data/hora da venda
+        printf("| %-6d | %-12s | %-10.2f | %-17.2f | %-19s \n", 
                v.codigo_produto, v.nome_produto, v.peso, v.valor_total, v.data);
         total_colaborador += v.valor_total;
-        printf("\n+-----------------------------------------------------------------------------+\n");
     }
 
+    printf("\n+----------------------------------------------------------------------------+\n");
+    printf("|Total de vendas do colaborador: %-44s \n|R$ %-11.2f", colaborador_atual, total_colaborador);
+    printf("\n+----------------------------------------------------------------------------+\n");
 }
-
