@@ -211,4 +211,3 @@ void excluirColaborador() {
     salvarColaboradores();
     printf("Colaborador com ID %d excluído com sucesso.\n", id);
 }
-
