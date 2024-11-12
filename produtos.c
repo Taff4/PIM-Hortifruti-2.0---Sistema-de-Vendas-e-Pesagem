@@ -173,11 +173,11 @@ void cadastrarProduto(Produto *p) {
         mostrarCabecalhoCadastro();
 
         printf("\nDigite a opção desejada:\n");
-        printf("1) Cadastrar um novo produto\n");
-        printf("2) Adicionar quantidade para um produto cadastrado\n");
-        printf("3) Alterar preço de um produto\n");
-        printf("0) Voltar ao menu\n");
-        printf("Escolha: ");
+        printf("| 1) Cadastrar um novo produto\n");
+        printf("| 2) Adicionar quantidade para um produto cadastrado\n");
+        printf("| 3) Alterar preço de um produto\n");
+        printf("| 0) Voltar ao menu\n");
+        printf("| Escolha: ");
         scanf(" %c", &opcao);
         LIMPA_BUFFER;
 
@@ -460,3 +460,5 @@ void atualizarProduto(Produto *p) {
         printf("Produto não encontrado.\n");
     }
 }
+
+
