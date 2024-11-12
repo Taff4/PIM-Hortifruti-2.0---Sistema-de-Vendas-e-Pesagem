@@ -24,3 +24,4 @@ Colaborador* buscarColaboradorPorId(int id);
 Colaborador* buscarColaboradorPorNome(const char *nome);
 
 #endif // COLABORADORES_H
+
