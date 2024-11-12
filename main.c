@@ -8,6 +8,7 @@
 #include "vendas.h"
 #include "colaboradores.h"
 #include "menu.h"
+#include "time.h"
 
 // Função para exibir mensagens de erro
 void exibirErro(const char *mensagem) {
@@ -20,7 +21,6 @@ void exibirErro(const char *mensagem) {
 void exibirDataHora() {
     time_t agora = time(NULL);
     struct tm *dataHora = localtime(&agora);
-    dataHora->tm_hour -= 3; // Ajusta para o horário de Brasília
     mktime(dataHora);
 
     printf("| Data: %02d/%02d/%d               \n", 
@@ -119,3 +119,5 @@ int main(void) {
 
     return 0;
 }
+
+
