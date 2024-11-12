@@ -109,7 +109,7 @@ void cadastrarColaborador() {
     printf("|      CADASTRO DE NOVO COLABORADOR      |\n");
     printf("+-----------------------------------------+\n");
 
-    printf("Digite o nome do novo colaborador(a) (ou '0' para cancelar): ");
+    printf("Digite o nome do novo colaborador(a), ou '0' para cancelar): ");
     fgets(novoColaborador.nome, sizeof(novoColaborador.nome), stdin);
     strtok(novoColaborador.nome, "\n");
     if (strcmp(novoColaborador.nome, "0") == 0) return;
@@ -211,3 +211,5 @@ void excluirColaborador() {
     salvarColaboradores();
     printf("Colaborador com ID %d excluído com sucesso.\n", id);
 }
+
+
