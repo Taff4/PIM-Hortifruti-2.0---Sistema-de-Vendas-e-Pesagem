@@ -5,6 +5,7 @@
 #include "colaboradores.h"
 #include "produtos.h"
 #include "vendas.h"
+#include "time.h"
 
 void exibirMenu(int acesso) {
     system("cls");
