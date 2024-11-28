@@ -34,15 +34,13 @@ O desenvolvimento seguiu uma combinação das metodologias **Cascata** e prátic
 ## Como Usar
 ### Pré-requisitos
 - Instalar o **Dev-C++** ou outra IDE compatível com linguagem C.
-- Clonar este repositório:  
-- git clone https://github.com/Taff4/PIM-Hortifruti-2.0---Sistema-de-Vendas-e-Pesagem.git
+- Clonar este repositório: git clone https://github.com/Taff4/PIM-Hortifruti-2.0---Sistema-de-Vendas-e-Pesagem.git
 
 ---
 
 ### Passos para Compilar e Executar
 1. Abra o projeto na IDE.
-2. Compile o arquivo `main.c` com os seguintes parâmetros:  
-- -std=c99 -std=c11
+2. Compile o arquivo `main.c` com os seguintes parâmetros: -std=c99 -std=c11
 
 ---
 Esses parâmetros garantem a compatibilidade com padrões modernos da linguagem C.
